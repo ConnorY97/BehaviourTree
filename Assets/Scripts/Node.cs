@@ -1,31 +1,85 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public enum NodeStates
 {
-    RUNNING,
-    SUCCESS,
-    FAILURE
+	RUNNING,
+	SUCCESS,
+	FAILURE
 }
 [System.Serializable]
 public abstract class Node
 {
+	//Parent node 
+	private Node m_parent = null;
 
-    /* Delegate that returns the state of the node.*/
-    public delegate NodeStates NodeReturn();
+	private string m_name; 
 
-    /* The current state of the node */
-    protected NodeStates m_nodeState;
+	/* Delegate that returns the state of the node.*/
+	public delegate NodeStates NodeReturn();
 
-    public NodeStates nodeState
-    {
-        get { return m_nodeState; }
-    }
+	/* The current state of the node */
+	protected NodeStates m_nodeState;
 
-    /* The constructor for the node */
-    public Node() { }
+	public NodeStates nodeState
+	{
+		get { return m_nodeState; }
+	}
 
-    /* Implementing classes use this method to evaluate the desired set of conditions */
-    public abstract NodeStates Evaluate();
+	public void SetParent(Node parent)
+	{
+		m_parent = parent; 
+	}
+
+	public Node GetParent()
+	{
+		return m_parent; 
+	}
+
+	/* The constructor for the node */
+	public Node(string name)
+	{
+		m_name = name; 
+	}
+
+	/* Implementing classes use this method to evaluate the desired set of conditions */
+	public abstract NodeStates Evaluate();
+
+	//public abstract Node CurrentRunningChild(); 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ * new rootacitons(true);
+ * connor.add(movetodoor - action);
+ * connor.add(findkey -> selector); 
+ * 
+ * update(connor.currentrunniognchild)
+ * 
+ * 
+ * public nodestate movetodoor()
+ * {
+ *		if (trans = door.trans)
+ *		return succ;
+ *		if (trans != door.tran
+ *		return running
+ * 
+ */
+
+
+	
