@@ -48,6 +48,8 @@ public abstract class Node
 		return m_name; 
 	}
 
+	public abstract Node GetCurrentChild();
+
 	/* Implementing classes use this method to evaluate the desired set of conditions */
 	public abstract NodeStates Evaluate();
 

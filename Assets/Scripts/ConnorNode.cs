@@ -36,7 +36,7 @@ public class ConnorNode : Node
 
 	public Node GetRunningChild()
 	{
-		return m_runningChild; 
+		return m_runningChild;
 	}
 
 
@@ -157,6 +157,11 @@ public class ConnorNode : Node
 	}
 	*/
 	#endregion
+
+	public override Node GetCurrentChild()
+	{
+		return m_children[m_index].GetCurrentChild(); 
+	}
 
 	public override NodeStates Evaluate()
 	{

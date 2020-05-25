@@ -19,7 +19,10 @@ public class ActionNode : Node
 		m_action = action;
 	}
 
-
+	public override Node GetCurrentChild()
+	{
+		return this;
+	}
 
 	/* Evaluates the node using the passed in delegate and  
      * reports the resulting state as appropriate */
