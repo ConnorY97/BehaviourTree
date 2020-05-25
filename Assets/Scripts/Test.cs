@@ -54,7 +54,7 @@ public class Test : MonoBehaviour
 		if (m_root.nodeState != NodeStates.SUCCESS && m_root.GetRunningChild() != null)
 			m_root.Evaluate();
 
-		//Debug.Log(m_root.GetRunningChild().GetName()); 
+		Debug.Log(m_root.GetRunningChild().GetName()); 
 	}
 
 	public NodeStates Walk()

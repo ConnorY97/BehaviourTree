@@ -209,14 +209,15 @@ public class ConnorNode : Node
 				}
 			}
 		}
-		//If it is a selector and we get to the end with everything failing 
-		else if (m_index > m_children.Count && !m_isSequence)
+		//If it is a selector and every child has been evaluated then it has failed
+		else if (m_index == m_children.Count && !m_isSequence)
 		{
 			m_nodeState = NodeStates.FAILURE;
 			m_runningChild = null;
 			return m_nodeState;
 		}
-		else if (m_index > m_children.Count && m_isSequence)
+		//If it is a sequence and every child has been evaluated then it has succeeded
+		else if (m_index == m_children.Count && m_isSequence)
 		{
 			m_nodeState = NodeStates.SUCCESS;
 			m_runningChild = null;
