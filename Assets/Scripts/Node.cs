@@ -43,6 +43,11 @@ public abstract class Node
 		m_name = name; 
 	}
 
+	public string GetName()
+	{
+		return m_name; 
+	}
+
 	/* Implementing classes use this method to evaluate the desired set of conditions */
 	public abstract NodeStates Evaluate();
 

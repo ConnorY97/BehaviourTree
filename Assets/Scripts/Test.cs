@@ -43,16 +43,18 @@ public class Test : MonoBehaviour
 		m_attemptToOpenDoor.AddChild(m_openDoor);
 		m_root.AddChild(m_print);
 
-		m_root.CurrentRunningChild();
+		//m_root.CurrentRunningChild();
+		m_root.Evaluate(); 
 
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (m_root.nodeState != NodeStates.SUCCESS)
-			m_root.CurrentRunningChild(); 
+		if (m_root.nodeState != NodeStates.SUCCESS && m_root.GetRunningChild() != null)
+			m_root.Evaluate();
 
+		//Debug.Log(m_root.GetRunningChild().GetName()); 
 	}
 
 	public NodeStates Walk()
