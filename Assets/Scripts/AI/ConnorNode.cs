@@ -22,11 +22,23 @@ public class ConnorNode : Node
 		m_children = nodes;
 	}
 
+	/// <summary>
+	/// bool:	decides whether this node will be a sequence or selector
+	/// string:	the name of the node for debugging purposes
+	/// </summary>
+	/// <param name="isSequence"></param>
+	/// <param name="name"></param>
 	public ConnorNode(bool isSequence, string name) : base(name)
 	{
 		m_isSequence = isSequence;
 	}
 
+	/// <summary>
+	/// node:	the child node to be added to this selector or sequence
+	///		the node will be added to the beginning of the list so add it from beginning to end 
+	///		it also sets the child's parent to 'this' node 
+	/// </summary>
+	/// <param name="child"></param>
 	public void AddChild(Node child)
 	{
 		//Node temp = new ConnorNode(false, "default");
@@ -34,12 +46,16 @@ public class ConnorNode : Node
 		child.SetParent(this);
 	}
 
+	/// <summary>
+	/// return: returns the current running child for this node 
+	/// </summary>
+	/// <returns></returns>
 	public Node GetRunningChild()
 	{
 		return m_runningChild;
 	}
 
-
+	//Failed attempts and the evaluate function 
 	#region Attempts 
 	/*
 	public Node CurrentRunningChild()
@@ -158,11 +174,24 @@ public class ConnorNode : Node
 	*/
 	#endregion
 
+	/// <summary>
+	/// return: returns the current node if it has children 
+	/// </summary>
+	/// <returns></returns>
 	public override Node GetCurrentChild()
 	{
-		return m_children[m_index].GetCurrentChild(); 
+		//Ensure you aren't trying to access a null object 
+		if (m_index >= m_children.Count)
+			return null;
+		else
+			return m_children[m_index].GetCurrentChild();
 	}
 
+	/// <summary>
+	/// Currently working Evaluate functions 
+	///		used to find the current running child of this node 
+	/// </summary>
+	/// <returns></returns>
 	public override NodeStates Evaluate()
 	{
 		if (m_index < m_children.Count)
