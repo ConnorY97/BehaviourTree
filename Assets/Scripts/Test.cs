@@ -26,6 +26,7 @@ public class Test : MonoBehaviour
 	public GameObject door;
 	private bool m_doorUnlocked;
 
+
 	[SerializeField]
 	public string currentAction; 
 
@@ -57,7 +58,6 @@ public class Test : MonoBehaviour
 
 		//m_root.CurrentRunningChild();
 		m_root.Evaluate();
-
 		currentAction = m_root.GetCurrentChild().GetName(); 
 
 	}
