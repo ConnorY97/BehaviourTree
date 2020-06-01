@@ -104,7 +104,7 @@ public class Test : MonoBehaviour
 			return NodeStates.RUNNING;
 		}
 		else
-			return NodeStates.FAILURE; 
+			return NodeStates.FAILURE;
 	}
 
 	public NodeStates FindKey()
