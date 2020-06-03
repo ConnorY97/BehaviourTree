@@ -63,6 +63,12 @@ public class BehaviourTreeEditor : EditorWindow
 			GUILayout.Label("Root", EditorStyles.boldLabel);
 			GUILayout.Box(behaviourTree.GetRoot().GetName());
 			EditorGUILayout.EndHorizontal();
+			//---------------------------------------------------
+			EditorGUILayout.BeginHorizontal();
+			GUILayout.Label("Node name: ");
+			nodeName = EditorGUILayout.TextField("", nodeName); 
+			EditorGUILayout.EndHorizontal();
+
 
 			EditorGUILayout.BeginHorizontal();
 			if (GUILayout.Button("Create Sequence"))
@@ -71,7 +77,7 @@ public class BehaviourTreeEditor : EditorWindow
 				//behaviourTree.GetRoot().AddChild(new ConnorNode(true, "Test sequence")); 
 				if (temp != null)
 				{
-					temp.AddChild(new ConnorNode(true, "This sequence"));
+					temp.AddChild(new ConnorNode(true, nodeName));
 					//inst.Show(); 
 				}
 			}
@@ -80,14 +86,18 @@ public class BehaviourTreeEditor : EditorWindow
 				ConnorNode temp = (ConnorNode)currentNode;
 				if (temp != null)
 				{
-					temp.AddChild(new ConnorNode(false, "This selector"));
+					temp.AddChild(new ConnorNode(false, nodeName));
 					GetWindow<BehaviourTreeEditor>("Name");
 				}
 			}
 			if (GUILayout.Button("Create Action"))
 			{
-				behaviourTree.GetRoot().AddChild(new ActionNode(temp, "Action Node"));//behaviourTree.AddBranch(true, "Move sequence", behaviourTree.GetRoot());
-
+				//behaviourTree.GetRoot().AddChild(new ActionNode(temp, nodeName));//behaviourTree.AddBranch(true, "Move sequence", behaviourTree.GetRoot());
+				ConnorNode temp = (ConnorNode)currentNode;
+				if (temp != null)
+				{
+					temp.AddChild(new ActionNode(temporary, nodeName));
+				}
 			}
 			EditorGUILayout.EndHorizontal();
 		}
@@ -140,7 +150,7 @@ public class BehaviourTreeEditor : EditorWindow
 
 	}
 
-	private NodeStates temp()
+	private NodeStates temporary()
 	{
 		return NodeStates.FAILURE; 
 	}

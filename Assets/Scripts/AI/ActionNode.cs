@@ -53,7 +53,9 @@ public class ActionNode : Node
 		//{
 		//	indetationString += "	"; 
 		//}
-		if (GUILayout.Button(this.GetName() + (src.currentNode == this ? "***" : "")))
+		if (GUILayout.Button((this.GetParent() == null ? "" : "Parent: "  + this.GetParent().GetName() + "       ")
+			+ this.GetName() + (src.currentNode == this ? "***" : "")
+			+ "           Action"))
 		{
 			src.currentNode = this; 
 		}

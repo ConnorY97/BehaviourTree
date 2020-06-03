@@ -265,7 +265,9 @@ public class ConnorNode : Node
 	{
 		//EditorGUILayout.BeginHorizontal(); 
 		//GUILayout.Button(this.GetName());
-		if (GUILayout.Button(this.GetName() + (src.currentNode == this ? "***" : "")))//if (GUILayout.Button(indentationString + this.GetName() + (src.currentNode == this ? "***" : "")))
+		if (GUILayout.Button((this.GetParent() == null ? "" : "Parent: " + this.GetParent().GetName() + "                ")
+			+ this.GetName() + (src.currentNode == this ? "***" : "")
+			+ (m_isSequence == true ? "       Sequence" : "           Selector")))//if (GUILayout.Button(indentationString + this.GetName() + (src.currentNode == this ? "***" : "")))
 		{
 			src.currentNode = this;
 		}
