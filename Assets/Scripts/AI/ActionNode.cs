@@ -6,13 +6,13 @@ using UnityEditor;
 public class ActionNode : Node
 {
 	/* Method signature for the action. */
-	public delegate NodeStates ActionNodeDelegate();
+	public delegate NodeState ActionNodeDelegate();
 
 	/* The delegate that is called to evaluate this node */
 	private ActionNodeDelegate m_action;
 
 	/* Because this node contains no logic itself, 
-     * the logic must be passed in in the form of  
+     * the logic must be passed in the form of  
      * a delegate. As the signature states, the action 
      * needs to return a NodeStates enum */
 	public ActionNode(ActionNodeDelegate action, string name) : base(name)
@@ -27,21 +27,21 @@ public class ActionNode : Node
 
 	/* Evaluates the node using the passed in delegate and  
      * reports the resulting state as appropriate */
-	public override NodeStates Evaluate()
+	public override NodeState Evaluate()
 	{
 		switch (m_action())
 		{
-			case NodeStates.SUCCESS:
-				m_nodeState = NodeStates.SUCCESS;
+			case NodeState.SUCCESS:
+				m_nodeState = NodeState.SUCCESS;
 				return m_nodeState;
-			case NodeStates.FAILURE:
-				m_nodeState = NodeStates.FAILURE;
+			case NodeState.FAILURE:
+				m_nodeState = NodeState.FAILURE;
 				return m_nodeState;
-			case NodeStates.RUNNING:
-				m_nodeState = NodeStates.RUNNING;
+			case NodeState.RUNNING:
+				m_nodeState = NodeState.RUNNING;
 				return m_nodeState;
 			default:
-				m_nodeState = NodeStates.FAILURE;
+				m_nodeState = NodeState.FAILURE;
 				return m_nodeState;
 		}
 	}

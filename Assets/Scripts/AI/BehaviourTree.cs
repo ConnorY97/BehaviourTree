@@ -17,7 +17,7 @@ public class BehaviourTree : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_root.nodeState != NodeStates.SUCCESS && m_root.GetRunningChild() != null)
+        if (m_root.nodeState != NodeState.SUCCESS && m_root.GetRunningChild() != null)
             m_root.Evaluate();
     }
 
@@ -31,5 +31,9 @@ public class BehaviourTree : MonoBehaviour
         return m_root; 
     }
 
+    public void SetRoot(ConnorNode root)
+    {
+        m_root = root; 
+    }
 
 }

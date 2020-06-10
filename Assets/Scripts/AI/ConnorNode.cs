@@ -193,7 +193,7 @@ public class ConnorNode : Node
 	///		used to find the current running child of this node 
 	/// </summary>
 	/// <returns></returns>
-	public override NodeStates Evaluate()
+	public override NodeState Evaluate()
 	{
 		if (m_index < m_children.Count)
 		{
@@ -203,19 +203,19 @@ public class ConnorNode : Node
 				switch (m_children[m_index].Evaluate())
 				{
 					//Selector is still running, move onto next node 
-					case NodeStates.FAILURE:
+					case NodeState.FAILURE:
 						++m_index;
-						m_nodeState = NodeStates.RUNNING;
+						m_nodeState = NodeState.RUNNING;
 						return m_nodeState;
 					//Selector has succeeded and now will exit 
-					case NodeStates.SUCCESS:
+					case NodeState.SUCCESS:
 						//Still want to increase the index to show that all the children have been evaluated 
 						++m_index; 
-						m_nodeState = NodeStates.SUCCESS;
+						m_nodeState = NodeState.SUCCESS;
 						return m_nodeState;
 					//Child is still running so evaluate child
-					case NodeStates.RUNNING:
-						m_nodeState = NodeStates.RUNNING;
+					case NodeState.RUNNING:
+						m_nodeState = NodeState.RUNNING;
 						m_runningChild = m_children[m_index];
 						return m_nodeState;
 				}
@@ -226,19 +226,19 @@ public class ConnorNode : Node
 				switch (m_children[m_index].Evaluate())
 				{
 					//If the node fails the whole sequence will exit 
-					case NodeStates.FAILURE:
+					case NodeState.FAILURE:
 						//Still want to increase the index to show that all the children have been evaluated 
 						++m_index;
-						m_nodeState = NodeStates.FAILURE;
+						m_nodeState = NodeState.FAILURE;
 						return m_nodeState;
 					//If the child succeeds the sequence will continue with a running state 
-					case NodeStates.SUCCESS:
+					case NodeState.SUCCESS:
 						++m_index;
-						m_nodeState = NodeStates.RUNNING;
+						m_nodeState = NodeState.RUNNING;
 						return m_nodeState;
 					//If the child is running it will run this child again 
-					case NodeStates.RUNNING:
-						m_nodeState = NodeStates.RUNNING;
+					case NodeState.RUNNING:
+						m_nodeState = NodeState.RUNNING;
 						m_runningChild = m_children[m_index];
 						return m_nodeState;
 				}
@@ -247,18 +247,18 @@ public class ConnorNode : Node
 		//If it is a selector and every child has been evaluated then it has failed
 		else if (m_index == m_children.Count && !m_isSequence)
 		{
-			m_nodeState = NodeStates.FAILURE;
+			m_nodeState = NodeState.FAILURE;
 			m_runningChild = null;
 			return m_nodeState;
 		}
 		//If it is a sequence and every child has been evaluated then it has succeeded
 		else if (m_index == m_children.Count && m_isSequence)
 		{
-			m_nodeState = NodeStates.SUCCESS;
+			m_nodeState = NodeState.SUCCESS;
 			m_runningChild = null;
 			return m_nodeState;
 		}
-		return NodeStates.FAILURE;
+		return NodeState.FAILURE;
 	}
 
 	public override void PrintGUIElement(BehaviourTreeEditor src)

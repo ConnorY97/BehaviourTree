@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEditor;
 
-public enum NodeStates
+public enum NodeState
 {
 	RUNNING,
 	SUCCESS,
@@ -17,12 +17,12 @@ public abstract class Node
 	private string m_name; 
 
 	/* Delegate that returns the state of the node.*/
-	public delegate NodeStates NodeReturn();
+	public delegate NodeState NodeReturn();
 
 	/* The current state of the node */
-	protected NodeStates m_nodeState;
+	protected NodeState m_nodeState;
 
-	public NodeStates nodeState
+	public NodeState nodeState
 	{
 		get { return m_nodeState; }
 	}
@@ -51,7 +51,7 @@ public abstract class Node
 	public abstract Node GetCurrentChild();
 
 	/* Implementing classes use this method to evaluate the desired set of conditions */
-	public abstract NodeStates Evaluate();
+	public abstract NodeState Evaluate();
 
 
 	public abstract void PrintGUIElement(BehaviourTreeEditor src);

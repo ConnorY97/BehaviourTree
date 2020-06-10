@@ -4,28 +4,28 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using System;
+using TMPro;
+using System.Reflection;
 
 //[CustomEditor(typeof(Test))]
 public class BehaviourTreeEditor : EditorWindow
 {
-	public GameObject source;
+	public GameObject source = null;
+	
+	private BehaviourTree behaviourTreeSrc = null;
 
-	private BehaviourTree behaviourTree;
-
-	private List<Button> branches = new List<Button>();
-	private List<Button> leafs = new List<Button>();
+	private Functions funcstionsSrc;// = new Functions();
+	MethodInfo[] functionListSrc;  
 
 	public Node currentNode;
 
+	//private string[] functionList = new string[] { "Empty", "empty1", "empyt2" };
+	int index = 0;
+	private List<string> functionList = new List<string>(); 
 	
 	public string nodeName;
-
-
-	//public EditorWindow inst;
 	public void OnEnable()
 	{
-		//inst = ScriptableObject.CreateInstance<EditorWindow>();
-		//inst.Show();
 	}
 
 	[MenuItem("Window/BehaviorTree")]
@@ -34,104 +34,108 @@ public class BehaviourTreeEditor : EditorWindow
 		GetWindow<BehaviourTreeEditor>("Tree");
 	}
 
-
-
 	private void OnGUI()
 	{
-		//this.Close();
+		funcstionsSrc = source.GetComponent<Functions>();
+		Type t = funcstionsSrc.GetType();
+		functionListSrc = t.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+		for (int i = 0; i < functionListSrc.Length; i++)
+		{
+			//functionList[i] = functionListSrc[i].Name;
+			functionList.Add(functionListSrc[i].Name);
+		}
 
 		EditorGUILayout.BeginHorizontal();
 		GUILayout.Label("AI Actor", EditorStyles.boldLabel);
 		source = (GameObject)EditorGUILayout.ObjectField(source, typeof(GameObject), true);
 		EditorGUILayout.EndHorizontal();
-
-		if (GUILayout.Button("Create Behaviour Tree"))
+		
+		
+		//Stops things from drawing if there is no gameobject assgined 
+		if (source != null)
 		{
-			//if (source.GetComponent<BehaviourTree>() == null)
-			//{
-			//get the behaviour tree we've been building up and actually set it to the source object.
-			source.AddComponent<BehaviourTree>();
-			behaviourTree = source.GetComponent<BehaviourTree>();
-			behaviourTree.CreateRoot(true, "Behaviour Tree Root");
-			currentNode = behaviourTree.GetRoot();
-			//}
-		}
-
-		if (behaviourTree.GetRoot() != null)
-		{
-			EditorGUILayout.BeginHorizontal();
-			GUILayout.Label("Root", EditorStyles.boldLabel);
-			GUILayout.Box(behaviourTree.GetRoot().GetName());
-			EditorGUILayout.EndHorizontal();
-			//---------------------------------------------------
-			EditorGUILayout.BeginHorizontal();
-			GUILayout.Label("Node name: ");
-			nodeName = EditorGUILayout.TextField("", nodeName); 
-			EditorGUILayout.EndHorizontal();
-
-
-			EditorGUILayout.BeginHorizontal();
-			if (GUILayout.Button("Create Sequence"))
+			if (GUILayout.Button("Create Behaviour Tree"))
 			{
-				ConnorNode temp = (ConnorNode)currentNode;
-				//behaviourTree.GetRoot().AddChild(new ConnorNode(true, "Test sequence")); 
-				if (temp != null)
+				if (source.GetComponent<BehaviourTree>() == null)
 				{
-					temp.AddChild(new ConnorNode(true, nodeName));
-					//inst.Show(); 
+					source.AddComponent<BehaviourTree>();
+					behaviourTreeSrc = source.GetComponent<BehaviourTree>();
+
+					behaviourTreeSrc.CreateRoot(true, "Behaviour Tree Root");
+					currentNode = behaviourTreeSrc.GetRoot();
 				}
 			}
-			if (GUILayout.Button("Create Selector"))
+			if (GUILayout.Button("Find"))
 			{
-				ConnorNode temp = (ConnorNode)currentNode;
-				if (temp != null)
-				{
-					temp.AddChild(new ConnorNode(false, nodeName));
-					GetWindow<BehaviourTreeEditor>("Name");
-				}
+				behaviourTreeSrc = null;
+				//behaviourTree.SetRoot(behaviourTree.GetRoot()); 
+				behaviourTreeSrc = source.GetComponent<BehaviourTree>();
+				behaviourTreeSrc.SetRoot(source.GetComponent<BehaviourTree>().GetRoot());
 			}
-			if (GUILayout.Button("Create Action"))
+			if (GUILayout.Button("Clear"))
 			{
-				//behaviourTree.GetRoot().AddChild(new ActionNode(temp, nodeName));//behaviourTree.AddBranch(true, "Move sequence", behaviourTree.GetRoot());
-				ConnorNode temp = (ConnorNode)currentNode;
-				if (temp != null)
-				{
-					temp.AddChild(new ActionNode(temporary, nodeName));
-				}
+				DestroyImmediate(source.GetComponent<BehaviourTree>());
+				behaviourTreeSrc = null;
 			}
-			EditorGUILayout.EndHorizontal();
+
+			if (behaviourTreeSrc != null)
+			{
+				EditorGUILayout.BeginHorizontal();
+				GUILayout.Label("Root", EditorStyles.boldLabel);
+				GUILayout.Box(behaviourTreeSrc.GetRoot().GetName());
+				EditorGUILayout.EndHorizontal();
+				//---------------------------------------------------
+				EditorGUILayout.BeginHorizontal();
+				GUILayout.Label("Node name:", EditorStyles.boldLabel);
+				//nodeName = EditorGUILayout.TextField("", nodeName);
+				nodeName = EditorGUILayout.TextField(nodeName); 
+				EditorGUILayout.EndHorizontal();
+				EditorGUILayout.BeginHorizontal();
+				GUILayout.Label("Functions", EditorStyles.boldLabel);
+				//EditorGUILayout.DropdownButton(funclist, FocusType.Passive);
+				index = EditorGUILayout.Popup(index, functionList.ToArray()); 
+				EditorGUILayout.EndHorizontal();
+
+
+				//if (currentNode.GetType() != typeof(ActionNode))
+				//{
+				EditorGUILayout.BeginHorizontal();
+				if (GUILayout.Button("Create Sequence"))
+				{
+					ConnorNode temp = (ConnorNode)currentNode;
+					if (temp != null)
+					{
+						temp.AddChild(new ConnorNode(true, nodeName));
+					}
+				}
+				if (GUILayout.Button("Create Selector"))
+				{
+					ConnorNode temp = (ConnorNode)currentNode;
+					if (temp != null)
+					{
+						temp.AddChild(new ConnorNode(false, nodeName));
+						//GetWindow<BehaviourTreeEditor>("Name");
+					}
+				}
+				if (GUILayout.Button("Create Action"))
+				{
+					ConnorNode temp = (ConnorNode)currentNode;
+					if (temp != null)
+					{
+						temp.AddChild(new ActionNode((ActionNode.ActionNodeDelegate)Delegate.CreateDelegate(typeof(ActionNode.ActionNodeDelegate), source.GetComponent<Functions>(), functionListSrc[index]), nodeName));
+					}
+				}
+				EditorGUILayout.EndHorizontal();
+			}
 		}
 
-		if (behaviourTree.GetRoot() != null)
+		if (behaviourTreeSrc != null)
 		{
-			//behaviourTree.GetRoot().
+			if (behaviourTreeSrc.GetRoot() != null)
+			{
+				behaviourTreeSrc.GetRoot().PrintGUIElement(this);
+			}
 		}
-
-		//if (source != null)
-		//{
-		//	if (GUILayout.Button())
-		//	{
-		//		Debug.Log("FUCK");
-		//	}
-		//	int yPos = 60;
-		//	int xPos = 40;
-		//	foreach (string thisValue in buttons)
-		//	{
-		//		GUI.Button(new Rect(xPos, yPos, 80, 30), thisValue);
-		//		xPos += 5;
-		//		yPos += 30;
-		//	}
-		//	if (GUILayout.Button("Add button..."))
-		//	{
-		//		buttons.Add("something");
-		//	}
-
-		//}
-
-		behaviourTree.GetRoot().PrintGUIElement(this);
-
-
-
 	}
 
 	private void AddNewItem(Node node)
@@ -141,7 +145,7 @@ public class BehaviourTreeEditor : EditorWindow
 			string code; 
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("Name:", EditorStyles.boldLabel);
-			GUILayout.Box(behaviourTree.GetRoot().GetName());
+			GUILayout.Box(behaviourTreeSrc.GetRoot().GetName());
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label("Create Action", EditorStyles.boldLabel);
@@ -150,9 +154,9 @@ public class BehaviourTreeEditor : EditorWindow
 
 	}
 
-	private NodeStates temporary()
+	private NodeState temporary()
 	{
-		return NodeStates.FAILURE; 
+		return NodeState.FAILURE; 
 	}
 
 }
